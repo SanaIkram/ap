@@ -1,0 +1,211 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package javaapplication7;
+
+import java.io.*;     
+import java.util.*;   
+
+
+/**
+ *
+ * @author test1
+ */
+
+
+import java.io.IOException;
+import java.util.*;
+
+public class JavaApplication7 {
+	static Map<String, LinkedList<flData>> m2 = new HashMap<String, LinkedList<flData>>();
+	static java.util.Date currDate = Calendar.getInstance().getTime();
+       public static crawler c ;
+
+   
+    public  static crawler c2 ;
+
+public NewClass linq;
+	static int i = 0;
+	static Scanner in = new Scanner(System.in);
+ 
+      //New class saves a linklist containing all directories
+	public class NewClass {
+   
+     
+	private LinkedList<String> lnklst;
+	
+	private int size; 
+
+	public NewClass() {
+		lnklst = new LinkedList<String>();
+		
+		size = 0;
+	}
+
+	public  void add(String s) {
+		lnklst.add(s);
+		size++;
+		
+	}
+
+	public synchronized String remove() {
+		String s;
+		
+		
+			s = lnklst.remove();
+			size--;
+                        return s;
+	}
+
+	
+}
+
+        
+   public class flData{
+           
+   String nm;
+   java.util.Date modDate;
+   flData(){
+   nm="";
+   modDate = null;
+   
+   }
+   
+   
+   
+   }
+        
+        
+     
+public  class crawler implements Runnable{
+
+	
+    crawler()
+    {}
+    
+		public void run() {
+			String name;
+                        flData fd= new flData();
+                        
+                        //while there are directories left unexplored
+			while ((name = linq.remove())!=null) {
+				File file = new File(name);
+                                Date d= new Date(file.lastModified());
+                                if (currDate.after(d)==true)
+                                    continue;
+				String entries[] = file.list();
+                              
+                                
+				if (entries == null)
+					continue;
+				for (String entry : entries) {
+					if (entry.compareTo(".") == 0)
+						continue;
+					
+					String fn = name + "\\" + entry;
+                                          fd.nm= fn;
+                                          fd.modDate = d;
+					String s = "";
+					LinkedList<flData> l = new LinkedList<flData>();
+						
+						
+	
+							
+							
+								StringTokenizer st = new StringTokenizer(entry," ");
+								while (st.hasMoreTokens()) {  
+                                                                    s = st.nextToken();
+                                                                  l  =m2.get(s);
+                                                                    l.add(fd);
+					                         m2.put(st.nextToken(),l );
+
+  
+								}
+								
+						
+						
+						
+					
+
+
+					
+				}
+			}
+		}
+	
+
+	
+
+}
+
+public static void search(String s)
+{
+    LinkedList<flData> ll = new LinkedList<flData>();
+ ll  =m2.get(s);
+System.out.println(ll);
+
+}
+	
+
+	public void processDirectory(String dir) {
+		try{
+                    
+			File file = new File(dir);
+                         Date d= new Date(file.lastModified());
+                                if (currDate.after(d)==true)
+                                {
+                                    
+                                   return;
+                                }
+			if (file.isDirectory()) {
+				String entries[] = file.list();
+			        System.out.println(dir);
+                                 System.out.println("lalal");
+					linq.add(dir);
+
+				for (String entry : entries) {
+					String subdir= entry;
+                                         System.out.println(subdir);
+					if (entry.compareTo(".") == 0)
+						continue;
+					
+					if (dir.endsWith("\\"))
+						subdir = dir+entry;
+					else
+						subdir = dir+"\\"+entry;
+					processDirectory(subdir);
+				}
+			}}catch(Exception e){}
+	}
+
+	public static void main(String Args[]) throws InterruptedException {
+
+		JavaApplication7 fc = new JavaApplication7();
+
+
+		System.out.println("Enter the directory name");
+		String Directory_Name;
+		Directory_Name = in.nextLine();
+		
+		System.out.println(Directory_Name);
+		fc.processDirectory(Directory_Name);
+                Thread t = new Thread(c);
+                 Thread t1 = new Thread(c2);
+                t1.start();
+                t.start();
+                t1.join();
+                t.join();
+		System.out.println("Enter the file to be searched");
+		String jj;
+		jj = in.nextLine();
+                search(jj);
+		System.out.println(m2);
+	}
+
+
+
+
+
+}
