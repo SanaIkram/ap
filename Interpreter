@@ -1,0 +1,239 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package javaapplication1;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
+import static javax.xml.bind.DatatypeConverter.parseInteger;
+
+/**
+ *
+ * @author test1
+ */
+
+public class JavaApplication1 {
+
+
+static Map <String, Integer> m2 = new HashMap <String, Integer>();
+static int count=1;
+  
+ public void exe(String s){
+     
+     String com="";
+     
+Integer a;
+Integer b;
+String var1;
+String var2;
+String op;
+String h;
+String lo;
+     
+ StringTokenizer st = new StringTokenizer(s);
+      com = st.hasMoreTokens() ? st.nextToken() : null;
+   if(com==null)
+   {
+   System.out.println("Not enough arguments provided at line "+count+"");
+   return;
+   
+   }
+    //System.out.println(com);
+    if(com.equals("let")){
+        //Declarations
+    var1 = st.nextToken();
+    //System.out.println(var1);
+    var2 =  st.nextToken();
+    //System.out.println(var2);
+    if(!var2.equals("="))//add if var2 is an int
+    {
+   System.out.println("Missing = sign immediately after name at line number "+count);
+   return ;
+    }
+    h = st.hasMoreTokens() ? st.nextToken() : null;
+   if(h==null)
+   {
+   System.out.println("Not enough arguments provided at line "+count);
+   return;
+   
+   }
+    a= parseInt(h);
+    m2.put(var1, a);
+    }
+    else{
+     if(com.equals("print"))
+     {
+        
+         var1 = st.hasMoreTokens() ? st.nextToken() : null;
+   if(var1==null)
+   {
+   System.out.println("Not enough arguments provided at line "+count);
+   return;
+   
+   }
+         
+         
+   a=   m2.get(var1);
+  
+     System.out.println(a);
+     return;
+     }
+     else
+     {
+     //is an operation
+         a= m2.get(com);
+         if(a==null)
+         {
+         System.out.println("Not a valid start of expression "+ com+ " is not a variable at line "+count);
+         return;
+         
+         }
+       
+        h = st.hasMoreTokens() ? st.nextToken() : null;
+   if(h==null)
+   {
+   System.out.println("Not enough arguments provided at line "+count);
+   return;
+   
+   }
+     if(!h.equals("="))//add if var2 is an int
+    {
+   System.out.println("Missing = sign immediately after name at line "+count);
+   return ;
+    }
+     
+     var1 = st.hasMoreTokens() ? st.nextToken() : null;
+   if(var1==null)
+   {
+   System.out.println("Not enough arguments provided at line "+count);
+   return;
+   
+   }
+     
+    
+    op = st.hasMoreTokens() ? st.nextToken() : null;
+   if(op==null)
+   {
+   System.out.println("Not enough arguments provided at line "+count);
+   return;
+   
+   }
+  
+   var2 = st.hasMoreTokens() ? st.nextToken() : null;
+   if(var2==null)
+   {
+   System.out.println("Not enough arguments providedat line "+count);
+   return;
+   
+   }
+    if(!op.equals("+")&&!op.equals("-")&&!op.equals("*")&&!op.equals("/"))
+    {
+    System.out.println("Valid operator not found at line "+count);
+    return;
+    }
+    //check if both operands are valid numbers or variables
+    if(Pattern.matches("[a-zA-Z]+", var1))
+    {
+    a= m2.get(var1);
+    if(a==null)
+    {
+    System.out.println("First operend Not valid variable at line "+count);
+    return;
+    }
+    }else
+     a=parseInt(var1);
+    if(Pattern.matches("[a-zA-Z]+", var2))
+    {
+    b= m2.get(var2);
+    if(b==null)
+    {
+    System.out.println("Second operend Not valid variable at line "+count);
+    return;
+    }
+    }
+    else
+     b=parseInt(var2);
+    if(op.equals("+"))
+    {
+    a=a+b;
+    m2.put(com,a);
+    }
+     if(op.equals("-"))
+    {
+    a=a-b;
+    m2.put(com,a);
+    }
+      if(op.equals("*"))
+    {
+    a=a*b;
+    m2.put(com,a);
+    }
+      if(op.equals("/"))
+    {
+    a=a/b;
+    m2.put(com,a);
+    }
+     
+    
+     }
+    
+    }
+    
+ 
+ 
+ }
+    
+    
+    
+   public void run() throws FileNotFoundException, IOException{
+System.out.println("Hi, Welcome to the interpreter\n");
+
+
+Scanner reader = new Scanner(System.in);  
+String n = reader.nextLine(); 
+ 
+
+ // This will reference one line at a time
+        String line = null;
+
+        
+         // FileReader reads text files in the default encoding.
+        FileReader fileReader =  new FileReader(n);
+
+           
+            BufferedReader bufferedReader = 
+                new BufferedReader(fileReader);
+
+            while((line = bufferedReader.readLine()) != null) {
+                exe(line);
+                count++;
+            }   
+
+            // Always close files.
+            bufferedReader.close();         
+        }
+
+
+    
+  
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws IOException {
+        // TODO code application logic here
+        JavaApplication1 j = new JavaApplication1();
+        j.run();
+    }
+    
+}
